@@ -1,0 +1,25 @@
+{% extends 'common/layout.html' %}
+
+{% block title %} 系统说明 {% endblock %}
+{% block body %}
+
+
+<div class="content-wrap">
+    <div class="panel panel-primary sys-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">系统说明</h3>
+        </div>
+        <div class="panel-body system-help">
+            <ul>
+                <li><span class="label label-danger">任务列表</span> &nbsp;查看已提交任务完成情况</li>
+                <li><span class="label label-warning">任务添加</span> &nbsp;提交任务后台执行，抓取信息保存在数据库中</li>
+                <li><span class="label label-success">用户查询</span> &nbsp;根据用户screen_name查看相关用户的基本信息/部分朋友以及粉丝信息/部分推文信息
+                </li>
+                <li><span class="label label-primary">推文查询</span> &nbsp;根据用户screen_name查询用户的所有推文信息</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

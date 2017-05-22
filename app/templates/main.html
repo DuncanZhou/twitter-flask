@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>我的桌面</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei"
+        }
+        #desk-top {
+            color: #111;
+            font-size: 17px;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+        ul {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        li > span {
+            color: #111;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="desk-top">系统信息 1.0</div>
+    <div>
+        <ul>
+            <li>    
+                <span>服务器信息</span>
+                <p>服务器地址: {{ server_addr }}</p>
+                <p>服务器主机名: {{ server_name }}</p>
+            </li>
+            <li>
+                <span>客户端信息</span>
+                <p>客户端地址: {{ remote_addr }}</p>
+                <p>浏览器信息: {{ user_agent }}</p>
+            </li> 
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{% extends 'common/layout.html' %}
+{% block title %} 标准人物详情 {% endblock %}
+{% block body %}
+<link rel="stylesheet" href="{{ url_for('static', filename='plugin/DataTables-1.10.8/css/jquery.dataTables.css')}}">
+
+<div class="content-wrap">
+
+	<div class="alert alert-success fade in">
+	    <button type="button" class="close" data-dismiss="alert">&times;</button>
+	    <strong>{{ user['screen_name'] }}'s details</strong>
+	</div>
+
+	<div class="row">
+      <table class="table table-bordered table-striped">
+      <tr>
+      	<td>
+	  		<div class="profile-img">
+	           	 <img src="{{ url_for('static', filename='profile/realDonaldTrump.jpg')}}" alt="User profile picture"> 
+	        </div>
+      	</td>
+      	<td>
+      		<tr>
+      			<td><strong>screen_name:</strong></td>
+      			<td>{{ user['screen_name'] }}</td>
+                        <td><strong>用户id:</strong></td>
+                        <td>{{ user['userid'] }}</td>
+                        <td><strong>职业领域:</strong></td>
+                        <td>{{ user['category'] }}</td>
+      		</tr>
+      		<tr>
+      			<td><strong>个人描述:</strong></td>
+      			<td>{{ user['description'] }}</td>
+      		</tr>
+      	</td>
+      </tr>
+      <tr>
+      	<td><strong>地点:</strong></td>
+      	<td>{{ user['location'] }}</td>
+      	<td><strong>帐号创建时间:</strong></td>
+      	<td>{{ user['created_at'] }}</td>
+            <td><strong>推文条数:</strong></td>
+            <td>{{ user['statuses_count'] }}</td>
+      </tr>
+      <tr>	
+      	<td><strong>粉丝数:</strong></td>
+      	<td>{{ user['followers_count'] }}</td>
+      	<td><strong>关注人数:</strong></td>
+      	<td>{{ user['friends_count'] }}</td>
+            <td><strong>点赞次数:</strong></td>
+            <td>{{ user['favourites_count'] }}</td>
+      </tr>
+      <tr>
+            <td><strong>使用语言:</strong></td>
+            <td>{{ user['lang'] }}</td>
+      	<td><strong>是否认证:</strong></td>
+            {% if user['verified'] == 1 %}
+      	     <td>yes</td>
+            {% else %}
+                  <td>no</td>
+            {% endif %}
+      	<td><strong>时区:</strong></td>
+      	<td>{{ user['time_zone'] }}</td>
+      </tr>
+      <tr>
+      	<td><strong>社交影响力分数:</strong></td>
+      	<td>null</td>
+      	<td><strong>近期情感状态:</strong></td>
+      	<td>null</td>
+      	<td><strong>社交关系网:</strong></td>
+      	<td>null</td>
+      </tr>
+      <tr></tr>
+      </table>
+     </div>
+</div>
+  <div class="content-wrap">
+            <div>sentiment with timeline.This will be a chart to display the sentiment of the user</div>
+     </div>
+       <div class="content-wrap">
+            <div>XML to display user</div>
+     </div>
+{% endblock %}

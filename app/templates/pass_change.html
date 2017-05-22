@@ -1,0 +1,77 @@
+{% extends 'common/layout.html' %}
+
+{% block title %} 任务列表 {% endblock %}
+{% block body %}
+
+<div class="content-wrap">
+	<div class="panel panel-primary">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">密码修改</h3>
+	    </div>
+	    <div class="panel-body">
+	        <form class="form-horizontal">
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">原密码</label>
+				    <div class="col-sm-10">
+				    	<input name="password" type="password" class="form-control" placeholder="原密码">
+				    </div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">新密码</label>
+					<div class="col-sm-10">
+						<input name="new_password" type="password" class="form-control" placeholder="新密码">
+					</div>
+				</div>
+				<div class="form-group">
+				  	<label class="col-sm-2 control-label">确认密码</label>
+					<div class="col-sm-10">
+						<input name="confirm_password" type="password" class="form-control" placeholder="确认密码">
+					</div>
+				</div>
+				<div class="box-footer text-right">·
+					<button class="btn btn-primary" style="padding: 8px 23px">提交</button>
+				</div>
+			</form>
+	    </div>
+	</div>
+</div>
+<script>
+	$(function () {
+		$("button").click(function(event) {
+			var password = $("input[name='password']").val().trim(),
+				new_password = $("input[name='new_password']").val().trim(),
+				confirm_password = $("input[name='confirm_password']").val().trim();
+
+			event.preventDefault();
+			if(password == '' || new_password == '' || confirm_password == '') {
+				alert("信息填写不完整！");
+				return false;
+			}
+			
+			if(confirm_password !== new_password) {
+				alert("两次密码输入不一致！");
+				return false;
+			}
+
+			$.post("{{ url_for('pass_change_submit') }}", {password: password, new_password: new_password, confirm_password: confirm_password},function(data){
+				switch (data.status) {
+					case 0:
+						alert('密码输入错误！');
+						return;
+					case 1:
+						alert('两次密码输入不一致！');
+						return;
+					case 2:
+						alert('密码修改错误！');
+						return;
+					case 3:
+						alert('密码修改成功！');
+						location.reload();
+				}
+			});
+
+			
+		});
+	})
+</script>
+{% endblock %}

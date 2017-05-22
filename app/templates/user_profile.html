@@ -1,0 +1,169 @@
+{% extends 'common/layout.html' %}
+
+{% block title %} 任务列表 {% endblock %}
+{% block body %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='plugin/DataTables-1.10.8/css/jquery.dataTables.css')}}">
+
+<div class="content-wrap">
+	<!-- Main content -->
+	<section class="content">
+		<div class="row">
+		    <div class="col-md-3">
+                    <div class="profile-img">
+                        <img src="{{ url_for('static', filename='profile/%s.jpg' % user.screen_name)}}" alt="User profile picture"> 
+                    </div>
+				<h3 class="text-center">{{ user.name }}</h3>
+				<p class="text-muted text-center">@ {{ user.screen_name }}</p>
+				<ul class="list-group list-group-unbordered">
+					<li class="list-group-item">
+						<b>ID</b> <a class="pull-right">{{ user.id }}</a>
+					</li>
+					<li class="list-group-item">
+					 	<b>Created_at</b> <a class="pull-right">{{ user.created_at }}</a>
+					</li>
+					<li class="list-group-item">
+					 	<b>Followers</b> <a class="pull-right">{{ user.followers_count }}</a>
+					</li>
+					<li class="list-group-item">
+					 	<b>Friends</b> <a class="pull-right">{{ user.friends_count }}</a>
+					</li>
+					<li class="list-group-item">
+					 	<b>Tweets</b> <a class="pull-right">{{ user.statuses_count}}</a>
+					</li>
+                         <li class="list-group-item">
+                              <b>Favourites</b> <a class="pull-right">{{ user.favourites_count}}</a>
+                         </li>
+                         <li class="list-group-item">
+                              <b>Lang</b> <a class="pull-right">{{ user.lang }}</a>
+                         </li>
+                         <li class="list-group-item">
+                              <b>Verified</b> <a class="pull-right">{{ user.verified}}</a>
+                         </li>
+                         <li class="list-group-item">
+                              <b>Protected</b> <a class="pull-right">{{ user.protected}}</a>
+                         </li> 
+                         <li class="list-group-item">
+                              <b>Utc Offset</b> <a class="pull-right">{{ user.utc_offset}}</a>
+                         </li>
+                         <li class="list-group-item">
+                              <b>Geo Enabled</b> <a class="pull-right">{{ user.geo_enabled}}</a>
+                         </li>
+				</ul>
+                    <strong><i class="fa fa-map-marker margin-r-5"></i>Time Zone</strong>
+                    <p class="text-muted">{{ user.time_zone }}</p>
+                    <hr>
+				<strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+				<p class="text-muted">{{ user.location }}</p>
+				<hr>
+                    <strong><i class="fa fa-book margin-r-5"></i>Description</strong>
+                    <p class="text-muted">{{ user.description }}</p>
+                    <hr>
+		    </div>
+	    	    <div class="col-md-9">
+     			<ul id="realtion-tab" class="nav nav-tabs" style="font-size:15px;margin-top: 14px;"> 
+     			     <li class="active"><a href="#tweet" data-toggle="tab">推文</a></li>
+     			     <li><a href="#friends" data-toggle="tab">朋友</a></li>
+     			     <li><a href="#followers" data-toggle="tab">粉丝</a></li>
+     			</ul>
+     			<div id="tab-content" class="tab-content" style="margin-top: 20px;">
+                         <div class="tab-pane fade active in" id="tweet">
+                              <table class="table table-bordered table-striped">
+                                   <thead>
+                                        <tr>
+                                             <th>ID</th>
+                                             <th>推文内容</th>
+                                             <th>创建日期</th>
+                                             <th>喜欢数</th>
+                                             <th>转推数</th>
+                                             <th>语言</th>
+                                             <th>来源</th>
+                                        </tr>
+                                   </thead>
+                                   <tbody>
+                                        {% for tweet in tweets %}
+                                             <tr>
+                                                  <td>{{ tweet['id'] }}</td>
+                                                  <td>{{ tweet['text'] }}</td>
+                                                  <td>{{ tweet['created_at'] }}</td>
+                                                  <td>{{ tweet['favorite_count'] }}</td>
+                                                  <td>{{ tweet['retweet_count'] }}</td>
+                                                  <td>{{ tweet['lang'] }}</td>
+                                                  <td>{{ tweet['source'] }}</td>
+                                             </tr>
+                                        {% endfor %}
+                                   </tbody>
+                              </table>
+				     </div>
+     			     <div class="tab-pane fade" id="followers">
+                              <table class="table table-bordered table-striped">
+                                   <thead>
+                                   	<tr>
+                                   		<th>screen_name</th>
+                                   		<th>name</th>
+                                   		<th>加入日期</th>
+                                   		<th>简介</th>
+                                   		<th>粉丝数</th>
+                                   		<th>朋友数</th>
+                                   		<th>推文数</th>
+                                   		<th>语言</th>
+                                   		<th>操作</th>
+                                   	</tr>
+                                    </thead>
+                              	<tbody>
+                         		{% for user in followers %}
+                         			<tr>
+                         				<td>{{ user['screen_name'] }}</td>
+                         				<td>{{ user['name'] }}</td>
+                         				<td>{{ user['created_at'] }}</td>
+                         				<td>{{ user['description'] }}</td>
+                         				<td>{{ user['followers_count'] }}</td>
+                         				<td>{{ user['friends_count'] }}</td>
+                         				<td>{{ user['statuses_count'] }}</td>
+                         				<td>{{ user['lang'] }}</td>
+                         				<td><a href="/user_profile/{{ user['screen_name'] }}">详情</a></td>
+                         			</tr>
+                         		{% endfor %}
+                              	</tbody>
+                              </table>
+     			     </div>
+     			     <div class="tab-pane fade" id="friends">
+     			         <table class="table table-bordered table-striped" >
+     						<thead>
+     							<tr>
+     								<th>screen_name</th>
+     								<th>name</th>
+     								<th>加入日期</th>
+     								<th>简介</th>
+     								<th>粉丝数</th>
+     								<th>朋友数</th>
+     								<th>推文数</th>
+     								<th>语言</th>
+     								<th>操作</th>
+     							</tr>
+                                   </thead>
+							<tbody>
+								{% for user in friends %}
+									<tr>
+                                                  <td>{{ user['screen_name'] }}</td>
+                                                  <td>{{ user['name'] }}</td>
+                                                  <td>{{ user['created_at'] }}</td>
+                                                  <td>{{ user['description'] }}</td>
+                                                  <td>{{ user['followers_count'] }}</td>
+                                                  <td>{{ user['friends_count'] }}</td>
+                                                  <td>{{ user['statuses_count'] }}</td>
+                                                  <td>{{ user['lang'] }}</td>
+                                                  <td><a href="/user_profile/{{ user['screen_name'] }}">详情</a></td>
+                                             </tr>
+								{% endfor %}
+							</tbody>
+     					</table>
+     			    </div>
+     			
+     			</div>
+	     	</div>
+	  </div>
+	</section>
+</div>
+
+{% endblock %}

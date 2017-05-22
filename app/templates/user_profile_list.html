@@ -1,0 +1,114 @@
+{% extends 'common/layout.html' %}
+{% block title %} 标准人物样本库列表 {% endblock %}
+{% block body %}
+<link rel="stylesheet" href="{{ url_for('static', filename='plugin/DataTables-1.10.8/css/jquery.dataTables.css')}}">
+
+<div class="content-wrap">
+	
+	<div class="alert alert-success fade in">
+	    <button type="button" class="close" data-dismiss="alert">&times;</button>
+	    <strong>典型人物列表</strong>
+	</div>
+
+	<table class="table table-bordered table-striped" style="font-size:15px;text-align: center;">
+		<thead>
+			<tr>
+				<th>screen_name</th>
+				<th>用户id</th>
+				<th>姓名</th>
+				<th>类别</th>
+				<th>推文数</th>
+				<th>粉丝数</th>
+				<th>好友数</th>
+				<th>点赞数</th>
+				<th>语言</th>
+				<th>是否认证</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users %}
+				<tr>
+					<td>{{ user['screen_name'] }}</td>
+					<td>{{ user['userid'] }}</td>
+					<td>{{ user['name'] }}</td>
+					<td><strong>{{ user['category'] }}</strong></td>
+					<td>{{ user['statuses_count']}}</td>
+					<td>{{ user['followers_count'] }}</td>
+					<td>{{ user['friends_count']}}</td>
+					<td>{{ user['favourites_count']}}</td>
+					<td>{{ user['lang']}}</td>
+					{% if user['verified'] == 1 %}
+					<td>yes</td>
+					{% else %}
+					<td>no</td>
+					{% endif %}
+					<td><a href="/StandardUserProfile/{{ user['screen_name'] }}">details</a></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+		
+	</table>
+</div>
+
+<script src="{{ url_for('static',filename='plugin/DataTables-1.10.8/js/jquery.dataTables.min.js') }}"></script>
+<script>
+	$(document).ready(function() {
+	    $('table').dataTable({
+	        language: {
+	           "sProcessing" : "正在获取数据，请稍后...", 
+	            "sProcessing": "处理中...",
+	            "sLengthMenu": "显示 _MENU_ 项结果",
+	            "sZeroRecords": "没有匹配结果",
+	            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+	            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+	            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+	            "sInfoPostFix": "",
+	            "sSearch": "搜索:",
+	            "sUrl": "",
+	            "sEmptyTable": "表中数据为空",
+	            "sLoadingRecords": "载入中...",
+	            "sInfoThousands": ",",
+	            "oPaginate": {
+	                "sFirst": "首页",
+	                "sPrevious": "上页",
+	                "sNext": "下页",
+	                "sLast": "末页"
+	            },
+	            "oAria": {
+	                "sSortAscending": ": 以升序排列此列",
+	                "sSortDescending": ": 以降序排列此列"
+	            }
+	        },
+	        "sPaginationType": "full_numbers",
+	        "aaSorting": [[ 1, "desc" ]], 
+	        "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] }] ,
+	        "bSort": false,
+	        "bPaginate": true, 
+	        "bProcessing": true,
+	        "iDisplayLength": 10, 
+	        "bFilter": true,
+	        "bLengthChange": true, 
+	        "bStateSave": false, 
+	        "searching":true,
+	        "aLengthMenu":[ 10, 25, 50, 100 ]
+	    });
+
+	    $("table").on('click', '.task-delete', function(event) {
+	    	if(!confirm("确认删除？删除后不可恢复")) {
+	    		event.preventDefault();
+	    		return;
+	    	}
+	    	var id = $(this).attr('data-id');
+	    	$.post("{{ url_for('task_delete') }}",{id: id},function(data) {
+	    		if(data.status == 1) {
+	    			alert("删除成功");
+	    			location.reload();
+	    		}
+	    		else {
+	    			alert("删除失败");
+	    		}
+	    	});
+	    })
+	});   
+</script>
+{% endblock %}

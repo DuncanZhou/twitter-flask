@@ -1,0 +1,189 @@
+{% extends 'common/layout.html' %}
+{% block title %} 主頁 {% endblock %}
+{% block body %}
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#mynav">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="navbar-brand">
+                <i class="glyphicon glyphicon-book"></i>
+                <span>Twitter Search</span>
+            </span>
+        </div>
+        <div class="collapse navbar-collapse" id="mynav">
+            <ul class="nav navbar-nav">
+                <li class=""><a href="{{ url_for('index') }}">首页</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        任务管理
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="javascript:openapp('{{ url_for('task_list') }}',1)">任务列表</a></li>
+                        <li><a href="javascript:openapp('{{ url_for('task_add') }}',2)">任务添加</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        内容查询
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="javascript:openapp('{{ url_for('user_search') }}',3)">用户查询</a></li>
+                        <li><a href="javascript:openapp('{{ url_for('tweets_search') }}',5)">推文查询</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        用户画像
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="javascript:openapp('{{ url_for('user_profile_list') }}',8)">典型人物列表</a></li>
+                        <li><a href="javascript:openapp('{{ url_for('add_standard_users') }}',9)">添加典型人物</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a style="color:#eee" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-user"></i>&nbsp;
+                        {% if not session.username %}
+                            <span>{{ session.userid }}</span>
+                        {% else %}
+                            <span>{{ session.username }}</span>
+                        {% endif %}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="javascript:openapp('{{ url_for('pass_change') }}',6)">修改密码</a></li>
+                        <li><a href="javascript:openapp('{{ url_for('system_help') }}',7)">系统说明</a></li>
+                        <li><a href="{{ url_for('logout') }}">退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<nav class="side-bar">
+    <ul class="nav-list">
+        <li class="nav-list-item">
+            <a>
+                <i class="glyphicon glyphicon-list-alt"></i>
+                <span>任务管理</span>
+                <i class="glyphicon glyphicon-chevron-right fr"></i>
+            </a>
+            <ul class="sub-list">
+                <li>
+                    <a data-id="1" href="javascript:openapp('{{ url_for('task_list') }}',1)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>任务列表</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-id="2" href="javascript:openapp('{{ url_for('task_add') }}',2)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>任务添加</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-list-item">
+            <a>
+                <i class="glyphicon glyphicon-search"></i>
+                <span>内容查询</span>
+                <i class="glyphicon glyphicon-chevron-right fr"></i>
+            </a>
+            <ul class="sub-list">
+                <li>
+                    <a data-id="3" href="javascript:openapp('{{ url_for('user_search') }}',3)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>用户查询</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                </li>
+               <!--  <li>
+                    <a data-id="2" href="javascript:openapp('{{ url_for('relation_search') }}',4,'关系查询', '基于人物名称查询粉丝/关注的人物信息')">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>关系查询</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                </li> -->
+                <li>
+                    <a data-id="5" href="javascript:openapp('{{ url_for('tweets_search') }}',5)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>推文查询</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-list-item">
+            <a>
+                <i class="glyphicon glyphicon-user"></i>
+                <span>用户画像</span>
+                <i class="glyphicon glyphicon-chevron-right fr"></i>
+            </a>
+            <ul class="sub-list">
+                <li>
+                    <a data-id="8" href="javascript:openapp('{{ url_for('user_profile_list') }}',8)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>典型人物列表</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                 </li>
+                <li>
+                    <a data-id="9" href="javascript:openapp('{{ url_for('add_standard_users') }}',9)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>添加典型人物</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-list-item">
+            <a>
+                <i class="glyphicon glyphicon-user"></i>
+                <span>个人中心</span>
+                <i class="glyphicon glyphicon-chevron-right fr"></i>
+            </a>
+            <ul class="sub-list">
+                <li>
+                    <a data-id="6" href="javascript:openapp('{{ url_for('pass_change') }}',6)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>密码修改</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                 </li>
+                <li>
+                    <a data-id="7" href="javascript:openapp('{{ url_for('system_help') }}',7)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>系统说明</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<div class="main-content">
+    <div class="page-content">
+        <iframe data-id='0'  src="{{ url_for('main') }}" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+</div>
+
+<script src="{{ url_for('static',filename='script/index.js')}}"></script>
+
+{% endblock %}

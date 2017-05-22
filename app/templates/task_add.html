@@ -1,0 +1,224 @@
+{% extends 'common/layout.html' %}
+
+{% block title %} 任务列表 {% endblock %}
+{% block body %}
+<style>
+	.max-width {max-width: 580px} .width-260 {width: 260px;} .box-footer > button {padding: 8px 23px}
+</style>
+<div class="content-wrap">
+	<div class="alert alert-warning fade in">
+	    <button type="button" class="close" data-dismiss="alert">&times;</button>
+	    <strong>任务添加：提交任务后台执行，抓取信息保存在数据库中。</strong><br/>
+	    必填信息分为三部分：<strong>任务名称、抓取信息、抓取设置。</strong><br/>
+	    其中需要抓取的用户通过
+	    <span class="label label-success">抓取用户</span> ( 单个用户screen_name，不确定时可<strong>查询</strong> )
+	    或
+	    <span class="label label-success">上传用户列表</span> (多个用户screen_name)
+	    来获取。<br/>
+	</div>
+
+	<div class="panel panel-info">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">任务添加</h3>
+	    </div>
+	    <div class="panel-body">
+	        <form class="form-horizontal" action="{{ url_for('task_add_submit') }}" method="post" onsubmit="return onSubmit();">
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">任务名称</label>
+				    <div class="col-sm-10 max-width">
+				    	<input name="task_name" type="text" class="form-control" placeholder="任务名称">
+				    </div>
+				</div>
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">抓取用户</label>
+				    <div class="col-sm-10 max-width">
+				        <input name="search_name" type="text" class="form-control" placeholder="用户screen_name">
+				    </div>
+				    <div>
+				        <a id="user-help" title="查询:不确定用户screen_name时可提供关键字查询相关用户"><i
+				                class="glyphicon glyphicon-question-sign"></i></a>&nbsp;&nbsp;&nbsp;
+				        <a type="button" data-toggle="modal" data-target="#searchModal" class="btn btn-danger">查询</a>
+				    </div>
+				</div>
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">上传用户列表</label>
+                    <div class="col-sm-10" style="padding-top: 8px">
+                        <input type="file" id="inputFile">
+                    </div>
+                </div>
+				<div class="form-group" style="margin-top: 25px">
+                    <label class="col-sm-2 control-label">抓取内容</label>
+                    <div class="col-sm-10">
+                        <div class="radio">
+                            <input type="checkbox" name="type" value="1" checked>
+                            <label>推文信息</label>
+                            <input class="num_input" name="tweet_num" data-min="1" data-max="100000" type="number" placeholder="数量上限十万" value='1'>
+                        </div>
+                        <div class="radio">
+                        	<input type="checkbox" name="type" value="2">
+                        	<label>朋友信息</label>
+                        	<input class="num_input" name="friends_num" data-min="1" data-max="10000" type="number" placeholder="数量上限一万" value='1'>
+                        </div>
+                        <div class="radio">
+                        	<input type="checkbox" name="type" value="3">
+                        	<label>粉丝信息</label>
+                        	<input class="num_input" name="followers_num" data-min="1" data-max="10000" type="number" placeholder="数量上限一万" value='1'>
+                        </div>
+                        <div class="radio">
+                            <input type="checkbox" name="type" value="4">
+                            <label>基础信息</label>
+                            <input class="num_input" name="basicinfo_num" data-min="1" data-max="50000000" type="number" placeholder="数量上限五千万" value='1'>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">线程数量</label>
+                    <div class="col-sm-10">
+                        <select name="thread" class="form-control width-260">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                </div>
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">抓取用户深度</label>
+                    <div class="col-sm-10">
+                        <select name="deepth" class="form-control width-260">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">抓取方式</label>
+                    <div class="col-sm-10">
+                        <select name="style" class="form-control width-260">
+                            <option value="1">广度优先</option>
+                            <option value="2">深度优先</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">扩展方式</label>
+                    <div class="col-sm-10">
+                        <select name="extension" class="form-control width-260">
+							<option value="1">朋友</option>
+							<option value="2">粉丝</option>
+							<option value="3">朋友和粉丝</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputRemakes" class="col-sm-2 control-label">备注</label>
+                    <div class="col-sm-10">
+                        <textarea name="remark" class="form-control" placeholder="备注"></textarea>
+                    </div>
+                </div>
+                <hr/>
+                <div class="box-footer text-right">
+                    <button class="btn btn-default" type="reset">清空</button>&nbsp;&nbsp;&nbsp;
+                    <button id="submitBtn" class="btn btn-primary" type="submit">提交</button>
+                </div>
+			</form>
+	    </div>
+
+	    <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+	         aria-hidden="true">
+	        <div class="modal-dialog">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                    </button>
+	                    <h4 class="modal-title">查询相关用户</h4>
+	                </div>
+	                <div class="modal-body" style="margin: 5px 25px; line-height: 30px">
+	                    <form class="form-horizontal">
+	                        <div class="form-group">
+	                            <label class="col-sm-2 control-label">关键词</label>
+	                            <div class="col-sm-8">
+	                                <input name="keywords" type="text" class="form-control" placeholder="查询关键词">
+	                            </div>
+	                            <div class="col-sm-2">
+	                                <a class="btn btn-primary">查询</a>
+	                            </div>
+	                        </div>
+	                        <hr/>
+	                        <div class="table-wrap">
+	                            <table class="table table-bordered table-striped">
+	                                <thead>
+	                                <tr>
+	                                    <th>screen_name</th>
+	                                    <th>name</th>
+	                                    <th>加入日期</th>
+	                                    <th>简介</th>
+	                                    <th>粉丝数</th>
+	                                </tr>
+	                                </thead>
+	                                <tbody>
+	                                </tbody>
+	                            </table>
+	                        </div>
+	                    </form>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-info" data-dismiss="modal">我知道了</button>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var status = {{ 1 if status else 0 }};
+
+		if(status == 1) {
+			alert("提交成功");
+		}
+		$(".num_input").blur(function() {
+			var min = +$(this).attr("data-min"),
+				max= +$(this).attr("data-max"),
+				val = +$(this).val();
+
+			if(val > max) {
+				alert("抓取数量超过合法范围，最多" + max + "条");
+				val = max;
+			}
+			if(val < min) {
+				alert("抓取数量低于合法范围，最少" + min + "条");
+				val = min
+			}
+			$(this).val(val);
+		});
+	});
+
+	function onSubmit() {
+		var task_name = $("input[name='task_name']").val(),
+		    search_name = $("input[name='search_name']").val(),
+		    remark = $("textarea").val(),
+			type = $("input[name='type[]']").val();
+
+		if (task_name.trim() == '' || search_name.trim() == '' || remark.trim() == '') {
+		    alert("信息填写不完整！");
+		    return false;
+		}
+
+		var checkbox = $("input[type='checkbox']:checked");
+
+		if (checkbox.length == 0) {
+		    alert("请选择抓取内容");
+		    return false;
+		}
+
+	}
+</script>
+{% endblock %}

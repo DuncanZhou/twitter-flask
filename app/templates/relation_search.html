@@ -1,0 +1,99 @@
+{% extends 'common/layout.html' %}
+
+{% block title %} 用户关系查询 {% endblock %}
+{% block body %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='plugin/DataTables-1.10.8/css/jquery.dataTables.css')}}">
+
+<div class="content-wrap">
+	<div class="clearfix input-group">
+		<input class="form-control"  type="text" placeholder="请输入人物名称" style="width:200px">
+		<span class="input-group-btn fl">
+            <button class="btn btn-primary" type="button">查询</button>
+        </span>
+	</div>
+	
+	<ul id="realtion-tab" class="nav nav-tabs" style="font-size:15px;"> 
+	    <li class="active">
+	        <a href="#follower" data-toggle="tab">他的粉丝</a>
+	    </li>
+	    <li>
+	    	<a href="#friends" data-toggle="tab">他的朋友</a>
+	    </li>
+	</ul>
+	<div id="tab-content" class="tab-content" style="margin-top: 20px;">
+	    <div class="tab-pane fade active in" id="follower">
+	        <table class="table table-border">
+        		<thead>
+        			<tr>
+        				<th>screen_name</th>
+        				<th>name</th>
+        				<th>加入日期</th>
+        				<th>简介</th>
+        				<th>粉丝数</th>
+        				<th>朋友数</th>
+        				<th>推文数</th>
+        				<th>语言</th>
+        				<th>操作</th>
+        			</tr>
+        			<tbody>
+
+        				{% for user in users %}
+        					<tr>
+        						<td>{{ user['id'] }}</td>
+        						<td>{{ user['task_name'] }}</td>
+        						<td>{{ user['created_at'].date() }}</td>
+        						<td>{{ user['userid'] }}</td>
+        						<td>{{ user['search_name'] }}</td>
+        						<td>{{ user['search_type'] }}</td>
+        						<td>{{ user['finished_at'] and task['finished_at'].date or ''}}</td>
+        						<td>{{ user['remark'] }}</td>
+        						<td><a class="task-delete" data-id={{task['id']}}>删除</a></td>
+        					</tr>
+        				{% endfor %}
+
+        			</tbody>
+        		</thead>
+        	</table>
+	    </div>
+	    <div class="tab-pane fade" id="friends">
+	        <table class="table table-border" >
+				<thead>
+					<tr>
+						<th>screen_name</th>
+						<th>name</th>
+						<th>加入日期</th>
+						<th>简介</th>
+						<th>粉丝数</th>
+						<th>朋友数</th>
+						<th>推文数</th>
+						<th>语言</th>
+						<th>操作</th>
+					</tr>
+					<tbody>
+
+						{% for user in users %}
+							<tr>
+								<td>{{ user['id'] }}</td>
+								<td>{{ user['task_name'] }}</td>
+								<td>{{ user['created_at'].date() }}</td>
+								<td>{{ user['userid'] }}</td>
+								<td>{{ user['search_name'] }}</td>
+								<td>{{ user['search_type'] }}</td>
+								<td>{{ user['finished_at'] and task['finished_at'].date or ''}}</td>
+								<td>{{ user['remark'] }}</td>
+								<td><a class="task-delete" data-id={{task['id']}}>删除</a></td>
+							</tr>
+						{% endfor %}
+
+					</tbody>
+				</thead>
+			</table>
+	    </div>
+	
+	</div>
+
+</div>
+
+
+{% endblock %}

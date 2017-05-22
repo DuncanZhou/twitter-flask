@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-transform" /> 
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>{% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='plugin/bootstrap/css/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+	<script src="{{ url_for('static', filename='plugin/jquery-1.11.2.js') }}"></script>
+	<script src="{{ url_for('static', filename='plugin/bootstrap/js/bootstrap.min.js') }}"></script>
+</head>
+<body>
+	{% block body %}{% endblock %}
+</body>
+</html>

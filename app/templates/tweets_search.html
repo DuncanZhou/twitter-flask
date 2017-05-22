@@ -1,0 +1,94 @@
+{% extends 'common/layout.html' %}
+
+{% block title %} 推文查询 {% endblock %}
+{% block body %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='plugin/DataTables-1.10.8/css/jquery.dataTables.css')}}">
+
+<div class="content-wrap">
+	<div class="alert alert-info fade in">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>推文查询：根据用户screen_name查询用户的所有推文信息</strong>
+    </div>
+
+	<div class="clearfix input-group">
+		<input class="form-control"  type="text" placeholder="请输入人物名称" style="width:200px">
+		<span class="input-group-btn fl">
+            <button class="btn btn-primary" type="button">查询</button>
+        </span>
+	</div>
+	<div class="table-wrap">
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>推文内容</th>
+					<th>创建日期</th>
+					<th>喜欢数</th>
+					<th>转推数</th>
+					<th>语言</th>
+					<th>来源</th>
+				</tr>
+				<tbody>
+				</tbody>
+			</thead>
+		</table>
+	</div>
+	<div class="view-more hidden"><a>查看更多推文</a></div>
+</div>
+
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function () {
+			var val = $('input').val().trim();
+			if(val === '') {
+				alert('人物名称不能为空');
+				return;
+			}
+			$("tbody").empty();
+			getUserTweets(val);
+		});
+
+		$(".view-more").click(function() {
+			if($(this).attr('data-maxid').trim() == '') {
+				return;
+			}
+			var val = $('input').val().trim();
+			if(val === '') {
+				alert('人物名称不能为空');
+				return;
+			}
+			getUserTweets(val, $(this).attr('data-maxid'));
+		})
+	})
+
+	function getUserTweets(screen_name, max_id) {
+		if(screen_name === '') {
+			return;
+		}
+		if(max_id == null) {
+			max_id = 0
+		}
+		$.post("{{ url_for('get_user_tweets') }}", {screen_name: screen_name, max_id: max_id}, function(data) {
+			$.each(data, function(i, val) {
+				dataToElement(val);
+			})
+			if(data.length < 28) {
+				$(".view-more").addClass('hidden');
+			}
+			else {
+				$(".view-more").attr('data-maxid', data[data.length - 1].id);
+				$(".view-more").removeClass('hidden');
+			}
+		})
+	}
+
+	function dataToElement(data) {
+		var tr = $("<tr>");
+		tr.append($('<td>').text(data['id'])).append($('<td>').text(data['text'])).append($('<td>').text(data['created_at'])).append($('<td>').text(data['favorite_count'])).append($('<td>').text(data['retweet_count'])).append($('<td>').text(data['lang'])).append($('<td>').text(data['source']));
+		
+		tr.appendTo($('tbody'));
+
+	}
+</script>
+{% endblock %}
