@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime,Float
 from app.database import db
 
 class Admin(db.Model):
@@ -62,4 +62,8 @@ class StandardUsers(db.Model):
     time_zone = Column(String(50))
     verified = Column(Integer)
     geo_enabled = Column(Integer)
-        
+    profile_image_url = Column(String(255))
+    crawler_date = Column(DateTime)
+    psychology = Column(Integer)     
+    influence_score = Column(Float)
+    influence = Column(Integer)

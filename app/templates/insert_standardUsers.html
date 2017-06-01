@@ -1,0 +1,126 @@
+{{ user }}
+{% extends 'common/layout.html' %}
+
+{% block title %} 任务列表 {% endblock %}
+{% block body %}
+<style>
+	.max-width {max-width: 580px} .width-260 {width: 260px;} .box-footer > button {padding: 8px 23px}
+</style>
+
+<div class="content-wrap">
+	<div class="alert alert-warning fade in">
+	    <button type="button" class="close" data-dismiss="alert">&times;</button>
+	    <strong>标准人物样本库样本添加：输入人物隐性属性</strong><br/>
+	</div>
+
+	<div class="panel panel-info">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">人物添加</h3>
+	    </div>
+	    <div class="panel-body">
+	        
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">任务名称</label>
+				    <div class="col-sm-10 max-width">
+				    	<input name="task_name" type="text" class="form-control" placeholder="任务名称">
+				    </div>
+				</div>
+		
+		 <table class="table table-bordered table-striped">
+      <tr>
+      	<td>
+	  		<div class="profile-img">
+	           	 <img src="{{ url_for('static', filename='profile/%s.jpg') % user['screen_name']}}" alt="User profile picture"> 
+	        </div>
+      	</td>
+      	<td>
+      		<tr>
+      			<td><strong>screen_name:</strong></td>
+      			<td>{{ user['screen_name'] }}</td>
+                        <td><strong>用户id:</strong></td>
+                        <td>{{ user['userid'] }}</td>
+                        <td><strong>职业领域:</strong></td>
+                        <td>{{ user['category'] }}</td>
+      		</tr>
+      		<tr>
+      			<td><strong>个人描述:</strong></td>
+      			<td>{{ user['description'] }}</td>
+      		</tr>
+      	</td>
+      </tr>
+      <tr>
+      	<td><strong>地点:</strong></td>
+      	<td>{{ user['location'] }}</td>
+      	<td><strong>帐号创建时间:</strong></td>
+      	<td>{{ user['created_at'] }}</td>
+            <td><strong>推文条数:</strong></td>
+            <td>{{ user['statuses_count'] }}</td>
+      </tr>
+      <tr>	
+      	<td><strong>粉丝数:</strong></td>
+      	<td>{{ user['followers_count'] }}</td>
+      	<td><strong>关注人数:</strong></td>
+      	<td>{{ user['friends_count'] }}</td>
+            <td><strong>点赞次数:</strong></td>
+            <td>{{ user['favourites_count'] }}</td>
+      </tr>
+      <tr>
+            <td><strong>使用语言:</strong></td>
+            <td>{{ user['lang'] }}</td>
+      	<td><strong>是否认证:</strong></td>
+            {% if user['verified'] == 1 %}
+      	     <td>yes</td>
+            {% else %}
+                  <td>no</td>
+            {% endif %}
+      	<td><strong>时区:</strong></td>
+      	<td>{{ user['time_zone'] }}</td>
+      </tr>
+      </table>
+                <form class="form-horizontal" action="{{ url_for('user_add_submit/%s') % user.screen_name }}" method="post" onsubmit="return onSubmit();">
+                <div class="box-footer text-right">
+		<div class="form-group">
+                    <label class="col-sm-2 control-label">所属领域</label>
+                    <div class="col-sm-10">
+                        <select name="category" class="form-control width-260">
+							<option value="1">政治</option>
+							<option value="2">宗教</option>
+							<option value="3">军事</option>
+							<option value="4">金融</option>
+							<option value="5">科技</option>
+							<option value="6">教育</option>
+							<option value="7">农业</option>
+							<option value="8">体育</option>
+							<option value="9">娱乐</option>
+
+                        </select>
+                    </div>
+                </div>
+<div class="form-group">
+                    <label class="col-sm-2 control-label">近期心理状态</label>
+                    <div class="col-sm-10">
+                        <select name="psychological" class="form-control width-260">
+                            <option value="1">正面</option>
+                            <option value="2">负面</option>
+                            <option value="3">中性</option>
+                        </select>
+                    </div>
+                </div>
+   <div class="form-group">
+                    <label class="col-sm-2 control-label">影响力大小</label>
+                    <div class="col-sm-10">
+                        <select name="influence" class="form-control width-260">
+                            <option value="1">大</option>
+                            <option value="2">中等</option>
+                            <option value="3">偏低</option>
+                        </select>
+                    </div>
+                </div>
+                    <button class="btn btn-default" type="reset">清空</button>&nbsp;&nbsp;&nbsp;
+                    <button id="submitBtn" class="btn btn-primary" type="submit">提交</button>
+                </div>
+		</form>
+	    </div>
+	</div>
+</div>
+{% endblock %}

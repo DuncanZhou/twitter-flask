@@ -26,6 +26,18 @@ app.add_url_rule('/user_profile_list','user_profile_list',UserProfile.user_profi
 app.add_url_rule('/add_standard_users','add_standard_users',UserProfile.add_standard_users)
 app.add_url_rule('/StandardUserProfile/<screen_name>','UserProfile',UserProfile.user_profile)
 app.add_url_rule('/user_add_submit','user_add_submit',UserProfile.user_add_submit,methods = ['POST'])
+app.add_url_rule('/insert_standard_users','insert_standard_users',UserProfile.insert_standard_users)
+app.add_url_rule('/UserDetails/<screen_name>/<type>','UserDetails',UserProfile.user_profiles)
+app.add_url_rule('/search_user/<type>','search_user',UserProfile.search_user)
+app.add_url_rule('/user_add_submit/<screen_name>',"user_add_submit",UserProfile.user_add_submit,methods=['POST'])
+app.add_url_rule('/OutPut2XML/<screen_name>','OutPut2XML',UserProfile.OutPut2XML)
+
+
+
+# restful web service
+app.add_url_rule('/twitter/api/profile/<screen_name>','profile_user',UserProfile.apiUserProfile,methods=['GET'])
+
+
 
 @app.route('/')
 @app.route('/index')

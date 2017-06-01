@@ -1,0 +1,159 @@
+{% extends 'common/layout.html' %}
+{% block title %} 用户画像 {% endblock %}
+{% block body %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='plugin/DataTables-1.10.8/css/jquery.dataTables.css')}}">
+
+<div class="content-wrap">
+   <div class="alert alert-warning fade in">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {% if type == '2' %}
+        通过<span class="label label-success">screen_name</span>来检索用户,获取推文和分析需要一些时间<br/>
+        {% else %}
+        通过<span class="label label-success">screen_name</span>来检索用户,添加用户<br/>
+        {% endif %}
+    </div>
+<div class="panel panel-info">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">检索</h3>
+	    </div>
+	    <div class="panel-body">
+	        <form class="form-horizontal" action="{{ url_for('user_add_submit') }}" method="post" onsubmit="return onSubmit();">
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">screen_name</label>
+				    <div class="col-sm-10 max-width">
+				        <input name="screen_name" type="text" class="form-control" placeholder="screen_name" id="search-input">
+				    </div>
+				</div>           
+                <hr/>
+			</form>
+	    </div>
+	</div>
+</div>
+
+<div class="content-wrap">
+	<div class="table-wrap">
+	    <table class="table table-bordered table-striped">
+	        <thead>
+	          	<tr>
+	          		<th>screen_name</th>
+	          		<th>name</th>
+	          		<th>加入日期</th>
+	          		<th>简介</th>
+	          		<th>粉丝数</th>
+	          		<th>朋友数</th>
+	          		<th>推文数</th>
+	          		<th>语言</th>
+	          		<th>操作</th>
+	          	</tr>
+	        </thead>
+	     	<tbody>
+	     	</tbody>
+	     </table>
+	</div>
+</div>
+<style>
+	#DataTables_Table_0_filter {display: none}
+	.dataTables_paginate {display: none}
+	.dataTables_length {position: absolute; top: -45px; right: 0}
+	.dataTables_length select {outline: none;height: 26px}
+</style>
+<script src="{{ url_for('static',filename='plugin/DataTables-1.10.8/js/jquery.dataTables.min.js') }}"></script>
+<script type="text/javascript">
+	$(function() {
+		$('button').click(function () {
+			var screen_name = $("#search-input").val().trim();
+			if(screen_name == '') {
+				alert('用户名称不能为空');
+				return;
+			}
+			if(screen_name.length > 20) {
+				alert('用户名称长度不能大于20！');
+				return;
+			}
+			location.href = "/UserDetails/" + screen_name + "/" + {{ type }};
+		});
+		$("#search-input").on('propertychange input', function() {
+			var screen_name = $(this).val().trim();
+			if(screen_name.length > 20) {
+				alert('用户名称长度不能大于20！');
+				return;
+			}
+			$("#DataTables_Table_0_filter input").val(screen_name).trigger('keyup');
+		});
+		var dataTableOut = $('table').dataTable( {
+		       	language: {
+		       	   "sProcessing" : "正在获取数据，请稍后...", 
+		       	    "sProcessing": "处理中...",
+		       	    "sLengthMenu": "显示 _MENU_ 项结果",
+		       	    "sZeroRecords": "没有匹配结果",
+		       	    "sInfo": "",
+		       	    "sInfoEmpty": "",
+		       	    "sInfoFiltered": "",
+		       	    "sInfoPostFix": "",
+		       	    "sSearch": "搜索:",
+		       	    "sUrl": "",
+		       	    "sEmptyTable": "表中数据为空",
+		       	    "sLoadingRecords": "载入中...",
+		       	    "sInfoThousands": ",",
+		       	    "oPaginate": {
+		       	        "sFirst": "首页",
+		       	        "sPrevious": "上页",
+		       	        "sNext": "下页",
+		       	        "sLast": "末页"
+		            },
+		            "oAria": {
+		                "sSortAscending": ": 以升序排列此列",
+		                "sSortDescending": ": 以降序排列此列"
+		            }
+		        },
+		        "searching":true,
+		        "bProcessing": true,
+		        "bServerSide": true,
+		        "iDisplayLength": 10,
+		        // "sPaginationType": "two_button",
+		        "fnServerData": retrieveData,
+		        "aLengthMenu": [ 10, 20, 40, 100 ],
+		        "sAjaxSource": "{{ url_for('user_search_detail') }}",
+		        "aoColumns": [
+		             {"mDataProp":"screen_name"},
+		             {"mDataProp":"name"},
+		             {"mDataProp":"created_at"},
+		             {"mDataProp":"description"},
+		             {"mDataProp":"followers_count"},
+		             {"mDataProp":"friends_count"},
+		             {"mDataProp":"statuses_count"},
+		             {"mDataProp":"lang"},
+		             {"mDataProp":"lang"}
+		        ]//$_GET['sColumns']将接收到aoColumns传递数据
+		   });  
+	})
+
+	function retrieveData( sSource111,aoData111, fnCallback111) {
+	    $.ajax({
+	        url : sSource111,//这个就是请求地址对应sAjaxSource
+	        data : {"aoData":JSON.stringify(aoData111)},//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
+	        type : 'post',
+	        dataType : 'json',
+	        async : false,
+	        success : function(result) {
+	            fnCallback111(result);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
+	            var trList = $(".table tbody tr");
+                var employee_id, id;     
+          		if(result['aaData'].length == 0) {
+          			return;
+          		}
+                trList.each(function(){  
+                    var screen_name = $(this).children().eq(0).text();
+                    var a = $("<a>").attr('href', "UserDetails/" + screen_name + "/" + {{ type }}).text("详情");
+                    // $("<td>").append(a).appendTo($(this))
+                    $(this).find('td').last().empty().append(a);
+                });
+	        },
+	        error : function(msg) {
+	        }
+	    });
+	}
+</script>
+
+{% endblock %}

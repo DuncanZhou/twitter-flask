@@ -15,7 +15,7 @@
       <tr>
       	<td>
 	  		<div class="profile-img">
-	           	 <img src="{{ url_for('static', filename='profile/realDonaldTrump.jpg')}}" alt="User profile picture"> 
+	           	 <img src="{{ url_for('static', filename='profile/%s.jpg') % user['screen_name']}}" alt="User profile picture"> 
 	        </div>
       	</td>
       	<td>
@@ -51,12 +51,16 @@
       </tr>
       <tr>
             <td><strong>使用语言:</strong></td>
-            <td>{{ user['lang'] }}</td>
+            {% if user.lang == 'en' %}
+            <td>英语</td>
+            {% else %}
+            <td>非英语</td>
+            {% endif %}
       	<td><strong>是否认证:</strong></td>
             {% if user['verified'] == 1 %}
-      	     <td>yes</td>
+      	     <td>是</td>
             {% else %}
-                  <td>no</td>
+                  <td>否</td>
             {% endif %}
       	<td><strong>时区:</strong></td>
       	<td>{{ user['time_zone'] }}</td>
@@ -77,6 +81,18 @@
             <div>sentiment with timeline.This will be a chart to display the sentiment of the user</div>
      </div>
        <div class="content-wrap">
-            <div>XML to display user</div>
+       <div class="row">
+          <span class="input-group-btn fl">
+               <button id="searchUserProfile" class="btn btn-primary" type="button">输出到XML文件</button>
+        </span>
+        </div>
      </div>
+
+<script type="text/javascript">
+      $(function() {
+            $('button').click(function () {
+                  var screen_name = $("#search-input").val().trim();
+                  location.href = "/OutPut2XML/" + screen_name;
+            });
+</script>
 {% endblock %}

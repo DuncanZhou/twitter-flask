@@ -47,7 +47,8 @@
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="javascript:openapp('{{ url_for('user_profile_list') }}',8)">典型人物列表</a></li>
-                        <li><a href="javascript:openapp('{{ url_for('add_standard_users') }}',9)">添加典型人物</a></li>
+                        <li><a href="javascript:openapp('{{ url_for('search_user',type=1) }}',9)">添加典型人物</a></li>
+                        <li><a href="javascript:openapp('{{ url_for('search_user',type=2) }}',10)">查询人物画像</a></li>
                     </ul>
                 </li>
             </ul>
@@ -144,9 +145,16 @@
                     </a>
                  </li>
                 <li>
-                    <a data-id="9" href="javascript:openapp('{{ url_for('add_standard_users') }}',9)">
+                    <a data-id="9" href="javascript:openapp('{{ url_for('search_user',type=1) }}',9)">
                         <i class="glyphicon glyphicon-chevron-right"></i>
                         <span>添加典型人物</span>
+                        <i class="glyphicon glyphicon-angle-right fr"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-id="10" href="javascript:openapp('{{ url_for('search_user',type=2) }}',10)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                        <span>查询人物画像</span>
                         <i class="glyphicon glyphicon-angle-right fr"></i>
                     </a>
                 </li>
